@@ -1,3 +1,10 @@
+import { FolderInfo } from '../../types/folder-info.type';
+import { useFileStore } from '../stores/FileStore';
+import { useModalStore } from '../stores/ModalStore';
+import { FileItem } from '../../types/file-item.type';
+import { useEffect, useState } from 'react';
+
+// Icons
 import DownloadIcon from '../assets/icons/download.svg?react';
 import FileAudioIcon from '../assets/icons/file-audio.svg?react';
 import FileConfigIcon from '../assets/icons/file-config.svg?react';
@@ -7,11 +14,6 @@ import FileUnknownIcon from '../assets/icons/file-unknown.svg?react';
 import FileVideoIcon from '../assets/icons/file-video.svg?react';
 import FolderIcon from '../assets/icons/folder.svg?react';
 import TrashIcon from '../assets/icons/trash.svg?react';
-import { FolderInfo } from '../../types/folder-info.type';
-import { useFileStore } from '../stores/FileStore';
-import { useModalStore } from '../stores/ModalStore';
-import { FileItem } from '../../types/file-item.type';
-import { useEffect, useState } from 'react';
 
 export function FileExplorerList({ isList, searchValue }: { isList: boolean; searchValue: string }) {
   const fileStore = useFileStore();
@@ -103,30 +105,60 @@ export function FileExplorerList({ isList, searchValue }: { isList: boolean; sea
 
           <tbody className="w-full divide-y divide-gray-200">
             {filteredFolders.map((folder) => (
-              <tr key={folder.path} className="font-semibold even:bg-gray-50" onClick={() => handleFolderClick(folder)}>
+              <tr key={folder.path} className="font-semibold even:bg-gray-50">
                 <td className="px-3 py-2 whitespace-nowrap">
                   <FolderIcon className="size-8" />
                 </td>
-                <td className="px-3 py-2 whitespace-nowrap">{folder.name}</td>
+                <td className="cursor-pointer px-3 py-2 whitespace-nowrap" onClick={() => handleFolderClick(folder)}>
+                  {folder.name}
+                </td>
                 <td className="px-3 py-2 whitespace-nowrap"></td>
                 <td className="px-3 py-2 whitespace-nowrap"></td>
                 <td className="px-3 py-2 whitespace-nowrap"></td>
                 <td className="flex flex-row gap-4 px-3 py-2 whitespace-nowrap">
-                  <TrashIcon className="cursor-pointer" onClick={() => handleDeleteFolder(folder)} />
-                  <DownloadIcon className="cursor-pointer" onClick={() => handleDownloadFolder(folder.path)} />
+                  <TrashIcon
+                    className="cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteFolder(folder);
+                    }}
+                  />
+                  <DownloadIcon
+                    className="cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDownloadFolder(folder.path);
+                    }}
+                  />
                 </td>
               </tr>
             ))}
             {filteredFiles.map((file) => (
               <tr key={file.pathname} className="font-semibold even:bg-gray-50">
                 <td className="px-3 py-2 whitespace-nowrap">{getIconForFileType(file.contentType, false)}</td>
-                <td className="overflow-hidden px-3 py-2 whitespace-nowrap">{file.fileName}</td>
+                <td
+                  className="cursor-pointer overflow-hidden px-3 py-2 whitespace-nowrap"
+                  onClick={() => fileStore.setDetailViewItem(file)}>
+                  {file.fileName}
+                </td>
                 <td className="px-3 py-2 whitespace-nowrap uppercase">{file.contentType}</td>
                 <td className="px-3 py-2 whitespace-nowrap">{file.sizeFormatted}</td>
                 <td className="px-3 py-2 whitespace-nowrap">{getDate(file.uploadedAt)}</td>
                 <td className="flex flex-row gap-4 px-3 py-2 whitespace-nowrap">
-                  <TrashIcon className="cursor-pointer" onClick={() => handleDeleteFile(file)} />
-                  <DownloadIcon className="cursor-pointer" onClick={() => handleDownloadFile(file.url)} />
+                  <TrashIcon
+                    className="cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteFile(file);
+                    }}
+                  />
+                  <DownloadIcon
+                    className="cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDownloadFile(file.url);
+                    }}
+                  />
                 </td>
               </tr>
             ))}
@@ -143,19 +175,16 @@ export function FileExplorerList({ isList, searchValue }: { isList: boolean; sea
             className="flex size-48 cursor-pointer flex-col items-center justify-between gap-2 rounded border-2 border-slate-200 bg-white p-4 shadow hover:brightness-90"
             onClick={() => handleFolderClick(folder)}>
             <FolderIcon className="size-28" />
-            <span className="max-w-42 overflow-hidden overflow-x-hidden text-center text-sm whitespace-nowrap">
-              {folder.name}
-            </span>
+            <span className="max-w-42 text-center text-sm wrap-break-word">{folder.name}</span>
           </div>
         ))}
         {filteredFiles.map((file) => (
           <div
             key={file.pathname}
-            className="flex size-48 cursor-pointer flex-col items-center justify-between gap-2 rounded border-2 border-slate-200 bg-white p-4 shadow hover:brightness-90">
+            className="flex size-48 cursor-pointer flex-col items-center justify-between gap-2 rounded border-2 border-slate-200 bg-white p-4 shadow hover:brightness-90"
+            onClick={() => fileStore.setDetailViewItem(file)}>
             {getIconForFileType(file.contentType, true)}
-            <span className="max-w-42 overflow-hidden overflow-x-hidden text-center text-sm whitespace-nowrap">
-              {file.fileName}
-            </span>
+            <span className="max-w-42 text-center text-sm wrap-break-word">{file.fileName}</span>
           </div>
         ))}
       </div>

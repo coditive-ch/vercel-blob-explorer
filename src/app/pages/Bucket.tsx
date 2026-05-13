@@ -3,6 +3,7 @@ import FolderIcon from '../assets/icons/folder.svg?react';
 import FilesIcon from '../assets/icons/files.svg?react';
 import { FileExplorer } from '../components/FileExplorer';
 import { useFileStore } from '../stores/FileStore';
+import { DetailView } from '../components/DetailView';
 
 export function Bucket() {
   const fileStore = useFileStore();
@@ -46,15 +47,15 @@ export function Bucket() {
 
   return (
     <div className="flex w-[calc(100vw-9rem)] flex-col gap-4 p-14">
-      <div className="grid grid-cols-2">
-        <div className="flex flex-col justify-between">
+      <div className="flex flex-row gap-6">
+        <div className="flex grow flex-col justify-between">
           <h1 className="text-brand-dark-blue text-4xl uppercase">Buckets</h1>
           <div className="flex flex-row gap-2 overflow-x-hidden">
             <FolderIcon className="text-brand-dark-blue size-8" />
             {getBreadcrumb()}
           </div>
         </div>
-        <div className="from-brand-gradient-start to-brand-gradient-end my-4 grid h-24 w-full grid-cols-2 rounded-lg bg-linear-to-r p-4 text-white shadow">
+        <div className="from-brand-gradient-start to-brand-gradient-end my-4 flex h-24 flex-row gap-8 rounded-lg bg-linear-to-r px-8 text-white shadow">
           <div className="flex flex-row items-center justify-center gap-2 text-center text-4xl">
             <FilesIcon className="size-8" />
             {storageStats.filesCount}
@@ -63,6 +64,7 @@ export function Bucket() {
         </div>
       </div>
       <FileExplorer />
+      <DetailView />
     </div>
   );
 }

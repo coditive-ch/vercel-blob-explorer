@@ -1,4 +1,6 @@
 import { NavLink } from 'react-router';
+
+// Icons
 import CoditiveIcon from '../assets/icons/coditive-icon.svg?react';
 import S3BucketIcon from '../assets/icons/s3-bucket.svg?react';
 import SettingsIcon from '../assets/icons/settings.svg?react';

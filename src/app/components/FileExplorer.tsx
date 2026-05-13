@@ -1,15 +1,17 @@
-import FolderIcon from '../assets/icons/folder.svg?react';
-import SearchIcon from '../assets/icons/search.svg?react';
-import DownloadIcon from '../assets/icons/download.svg?react';
-import TrashIcon from '../assets/icons/trash.svg?react';
-import FileUploadIcon from '../assets/icons/file-upload.svg?react';
-import FolderUploadIcon from '../assets/icons/folder-upload.svg?react';
-import ViewListIcon from '../assets/icons/view-list.svg?react';
-import ViewGridIcon from '../assets/icons/view-grid.svg?react';
 import { FileExplorerList } from './FileExplorerList';
 import { useFileStore } from '../stores/FileStore';
 import { useEffect, useState } from 'react';
 import { useModalStore } from '../stores/ModalStore';
+
+// Icons
+import DownloadIcon from '../assets/icons/download.svg?react';
+import FileUploadIcon from '../assets/icons/file-upload.svg?react';
+import FolderIcon from '../assets/icons/folder.svg?react';
+import FolderUploadIcon from '../assets/icons/folder-upload.svg?react';
+import SearchIcon from '../assets/icons/search.svg?react';
+import TrashIcon from '../assets/icons/trash.svg?react';
+import ViewGridIcon from '../assets/icons/view-grid.svg?react';
+import ViewListIcon from '../assets/icons/view-list.svg?react';
 
 export function FileExplorer() {
   const fileStore = useFileStore();
@@ -83,17 +85,17 @@ export function FileExplorer() {
           <FolderIcon className="size-6" />
           <span className="text-brand-dark-blue text-lg font-medium uppercase">{getFolderName()}</span>
         </div>
-        <div className="flex flex-row gap-2 border-r-2 border-slate-200 px-4 py-2">
+        <div className="flex grow flex-row-reverse gap-2 border-r-2 border-slate-200 px-4 py-2">
+          <ExplorerButton clickHandler={() => setSearchEnabled(!searchEnabled)} icon={SearchIcon} />
           {searchEnabled && (
             <input
               type="text"
               id="Search"
-              className="focus:outline-brand-light-blue text-brand-dark-blue mt-0.5 h-12 w-full rounded-lg border-2 border-slate-200 p-2 text-lg shadow"
+              className="focus:outline-brand-light-blue text-brand-dark-blue h-12 w-full rounded-lg border-2 border-slate-200 p-2 text-lg shadow"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
             />
           )}
-          <ExplorerButton clickHandler={() => setSearchEnabled(!searchEnabled)} icon={SearchIcon} />
         </div>
         <div className="flex flex-row gap-4 border-r-2 border-slate-200 px-4 py-2">
           <ExplorerButton clickHandler={handleFolderDownload} icon={DownloadIcon} />

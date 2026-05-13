@@ -22,8 +22,10 @@ if (started) {
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 2000,
-    height: 1200,
+    width: 800,
+    height: 600,
+    titleBarStyle: 'default',
+    ...(process.platform !== 'darwin' ? { titleBarOverlay: true } : {}),
     webPreferences: {
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js'),
@@ -36,12 +38,6 @@ const createWindow = () => {
   } else {
     mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
   }
-
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
-
-  // Delete cache
-  // mainWindow.webContents.session.clearCache();
 };
 
 // This method will be called when Electron has finished
@@ -102,49 +98,58 @@ app.on('activate', () => {
 async function handleFileServiceFileUpload(token: string, folderPath: string) {
   const fileService = new FileService();
 
-  const { canceled, filePaths } = await dialog.showOpenDialog({
-    properties: ['openFile', 'multiSelections'],
-  });
+  try {
+    const { canceled, filePaths } = await dialog.showOpenDialog({
+      properties: ['openFile', 'multiSelections'],
+    });
 
-  filePaths.forEach((filePath) => log.info(`Selected file: ${filePath}`));
+    filePaths.forEach((filePath) => log.info(`Selected file: ${filePath}`));
 
-  if (!canceled) {
-    const filesWithPath: { localFilePath: string; size: number }[] = [];
+    if (!canceled) {
+      const filesWithPath: { localFilePath: string; size: number }[] = [];
 
-    // Get all selected files with their sizes
-    for (const filePath of filePaths) {
-      if (existsSync(filePath)) {
-        const filePathStats = await stat(filePath);
-        filesWithPath.push({
-          localFilePath: filePath,
-          size: filePathStats.size,
-        });
-      } else {
-        log.warn(`File does not exist: ${filePath}`);
+      // Get all selected files with their sizes
+      for (const filePath of filePaths) {
+        if (existsSync(filePath)) {
+          const filePathStats = await stat(filePath);
+          filesWithPath.push({
+            localFilePath: filePath,
+            size: filePathStats.size,
+          });
+        } else {
+          log.warn(`File does not exist: ${filePath}`);
+        }
+      }
+
+      const totalSize = filesWithPath.reduce((acc, file) => acc + file.size, 0);
+      let totalUploadedSize = 0;
+      let uploadPercentage = 0;
+
+      // Progress function to track upload progress across multiple files
+      const progressUpdate = (percentage: number, fileSize: number, uploadedSize: number) => {
+        const totalPercentage = Math.round(((totalUploadedSize + uploadedSize) / (totalSize || 1)) * 100);
+        log.info(`File Upload Progress: ${totalPercentage}% (${totalUploadedSize + uploadedSize} of ${totalSize})`);
+
+        // Update progress only if percentage has changed
+        if (totalPercentage !== uploadPercentage) {
+          uploadPercentage = totalPercentage;
+          mainWindow.setProgressBar(totalPercentage / 100);
+          mainWindow.webContents.send('PROGRESS_UPDATE', totalPercentage);
+        }
+      };
+
+      for (const uploadFile of filesWithPath) {
+        await fileService.uploadFile(token, folderPath, uploadFile.localFilePath, progressUpdate);
+        totalUploadedSize += uploadFile.size;
       }
     }
-
-    const totalSize = filesWithPath.reduce((acc, file) => acc + file.size, 0);
-    let totalUploadedSize = 0;
-    let uploadPercentage = 0;
-
-    // Progress function to track upload progress across multiple files
-    const progressUpdate = (percentage: number, fileSize: number, uploadedSize: number) => {
-      const totalPercentage = Math.round(((totalUploadedSize + uploadedSize) / (totalSize || 1)) * 100);
-      log.info(`File Upload Progress: ${totalPercentage}% (${totalUploadedSize + uploadedSize} of ${totalSize})`);
-
-      // Update progress only if percentage has changed
-      if (totalPercentage !== uploadPercentage) {
-        uploadPercentage = totalPercentage;
-        mainWindow.setProgressBar(totalPercentage / 100);
-        mainWindow.webContents.send('PROGRESS_UPDATE', totalPercentage);
-      }
-    };
-
-    for (const uploadFile of filesWithPath) {
-      await fileService.uploadFile(token, folderPath, uploadFile.localFilePath, progressUpdate);
-      totalUploadedSize += uploadFile.size;
-    }
+  } catch (error) {
+    log.error('Error uploading file:', error);
+    throw new Error('Failed to upload file', { cause: error });
+  } finally {
+    // Clear progress bar in case of error
+    mainWindow.setProgressBar(-1);
+    mainWindow.webContents.send('PROGRESS_UPDATE', 0);
   }
 }
 
@@ -193,6 +198,10 @@ async function handleFileServiceFolderUpload(token: string, folderPath: string) 
   } catch (error) {
     log.error('Error uploading folder:', error);
     throw new Error('Failed to upload folder', { cause: error });
+  } finally {
+    // Clear progress bar in case of error
+    mainWindow.setProgressBar(-1);
+    mainWindow.webContents.send('PROGRESS_UPDATE', 0);
   }
 }
 
@@ -216,6 +225,10 @@ async function handleFileServiceFileDownload(token: string, fileUrl: string) {
     }
   } catch (error) {
     log.error('Error downloading file:', error);
+  } finally {
+    // Clear progress bar in case of error
+    mainWindow.setProgressBar(-1);
+    mainWindow.webContents.send('PROGRESS_UPDATE', 0);
   }
 }
 
@@ -260,5 +273,9 @@ async function handleFileServiceFolderDownload(token: string, folderPath: string
     log.error('Error downloading folder:', error);
   } finally {
     await rm(tmpFolder, { recursive: true, force: true });
+
+    // Clear progress bar after upload is complete
+    mainWindow.setProgressBar(-1);
+    mainWindow.webContents.send('PROGRESS_UPDATE', 0);
   }
 }

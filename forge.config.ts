@@ -11,9 +11,25 @@ const config: ForgeConfig = {
   packagerConfig: {
     asar: true,
     executableName: 'vercel-blob-explorer',
+    icon: 'src/appIcons/icon',
   },
   rebuildConfig: {},
-  makers: [new MakerSquirrel({}), new MakerZIP({}, ['darwin']), new MakerRpm({}), new MakerDeb({})],
+  makers: [
+    new MakerSquirrel({
+      setupIcon: 'src/appIcons/icon.ico',
+    }),
+    new MakerZIP({}, ['darwin']),
+    new MakerRpm({
+      options: {
+        icon: 'src/appIcons/icon.png',
+      },
+    }),
+    new MakerDeb({
+      options: {
+        icon: 'src/appIcons/icon.png',
+      },
+    }),
+  ],
   plugins: [
     new VitePlugin({
       // `build` can specify multiple entry builds, which can be Main process, Preload scripts, Worker process, etc.

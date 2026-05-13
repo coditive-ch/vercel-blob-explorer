@@ -2,14 +2,14 @@ import { Outlet, useNavigate, useNavigation } from 'react-router';
 import { Sidebar } from './components/Sidebar';
 import { Loader } from './components/Loader';
 import { useFileStore } from './stores/FileStore';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Modal } from './components/Modal';
 
 export function App() {
   const navigation = useNavigation();
   const navigate = useNavigate();
   const fileStore = useFileStore();
-  let isLoading: boolean = false;
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const token = fileStore.token;
@@ -22,8 +22,7 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    isLoading = Boolean(navigation.location) || fileStore.isLoading;
-    console.log(`IsLoading Effect: ${isLoading}`);
+    setIsLoading(Boolean(navigation.location) || fileStore.isLoading);
   }, [navigation, fileStore.isLoading]);
 
   return (

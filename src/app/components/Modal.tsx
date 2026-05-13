@@ -64,7 +64,7 @@ export function Modal() {
 
   return (
     <div
-      className="fixed inset-0 z-50 grid place-content-center bg-transparent backdrop-blur-sm backdrop-brightness-75"
+      className="fixed inset-0 z-60 grid place-content-center bg-transparent backdrop-blur-sm backdrop-brightness-75"
       role="dialog"
       aria-modal="true">
       <div

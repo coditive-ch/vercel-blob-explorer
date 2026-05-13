@@ -6,7 +6,10 @@ import { FolderInfo } from './types/folder-info.type';
 
 contextBridge.exposeInMainWorld('electronAPI', {
   onProgressUpdate: (callback: (value: number) => void) =>
-    ipcRenderer.on('PROGRESS_UPDATE', (_event, value) => callback(value)),
+    ipcRenderer.on('PROGRESS_UPDATE', (_event, value) => {
+      console.log('Progress update received in preload:', value);
+      callback(value);
+    }),
   fileService: {
     testToken: (token: string) => ipcRenderer.invoke('FILE_SERVICE_TEST_TOKEN', token).then((res: boolean) => res),
     listFiles: (token: string, folderPath: string) =>

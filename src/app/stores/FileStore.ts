@@ -8,11 +8,13 @@ interface FileStore {
   isLoading: boolean;
   folders: FolderInfo[];
   files: FileItem[];
+  detailViewItem: FileItem | null;
   folderPath: string;
   token: string;
   testToken: (token: string) => Promise<boolean>;
   setToken: (token: string) => void;
   setFolderPath: (folderPath: string) => void;
+  setDetailViewItem: (item: FileItem | null) => void;
   listFiles: () => Promise<void>;
   uploadFile: (folderPath: string) => Promise<void>;
   uploadFolder: (folderPath: string) => Promise<void>;
@@ -32,6 +34,7 @@ const initialState = {
   files: [] as FileItem[],
   folderPath: '',
   token: '',
+  detailViewItem: null,
 };
 
 export const useFileStore = create<FileStore>()(
@@ -44,6 +47,7 @@ export const useFileStore = create<FileStore>()(
       testToken: async (token: string) => window.electronAPI.fileService.testToken(token),
       setToken: (token: string) => set(() => ({ token })),
       setFolderPath: (folderPath: string) => set(() => ({ folderPath })),
+      setDetailViewItem: (item: FileItem | null) => set(() => ({ detailViewItem: item })),
       listFiles: async () => {
         set(() => ({ isLoading: true }));
         const res: FolderItem = await window.electronAPI.fileService.listFiles(get().token, get().folderPath);

@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router';
+import { createBrowserRouter, redirect } from 'react-router';
 import { App } from './App';
 import { Bucket } from './pages/Bucket';
 import { Connect } from './pages/Connect';
@@ -23,5 +23,9 @@ export const router = createBrowserRouter([
     path: '/connect',
     index: true,
     Component: Connect,
+  },
+  {
+    path: '/*',
+    loader: () => redirect('/'),
   },
 ]);
