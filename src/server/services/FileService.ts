@@ -289,8 +289,17 @@ export class FileService {
     return metaResult;
   }
 
-  async getStorageStats(token: string): Promise<{ filesCount: number; totalSize: string }> {
-    const resultList: ListBlobResult = await list({ mode: 'expanded', prefix: '', token });
+  async getStorageStats(token?: string): Promise<{ filesCount: number; totalSize: string }> {
+    // If no token provided and no environment token is configured, return empty stats
+    const effectiveToken = token && token.length > 0 ? token : process.env.BLOB_READ_WRITE_TOKEN;
+    if (!effectiveToken) {
+      return {
+        filesCount: 0,
+        totalSize: FileService.convertBytes(0),
+      };
+    }
+
+    const resultList: ListBlobResult = await list({ mode: 'expanded', prefix: '', token: effectiveToken });
 
     const files = resultList.blobs.filter((blob) => !blob.pathname.endsWith('/')) || [];
     const totalSize = files.reduce((acc, file) => acc + file.size, 0);
