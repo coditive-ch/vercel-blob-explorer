@@ -20,10 +20,11 @@ if (started) {
 }
 
 const createWindow = () => {
-  // Create the browser window.
+  // Create the browser window hidden to avoid flicker.
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    show: false,
     titleBarStyle: 'default',
     ...(process.platform !== 'darwin' ? { titleBarOverlay: true } : {}),
     webPreferences: {
@@ -38,6 +39,16 @@ const createWindow = () => {
   } else {
     mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
   }
+
+  // Maximize and show once renderer is ready
+  mainWindow.once('ready-to-show', () => {
+    try {
+      mainWindow.maximize();
+    } catch {
+      // ignore if maximize fails on some platforms
+    }
+    mainWindow.show();
+  });
 };
 
 // This method will be called when Electron has finished
