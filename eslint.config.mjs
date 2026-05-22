@@ -18,10 +18,10 @@ const compat = new FlatCompat({
 
 export default defineConfig([
   {
-    ignores: ['**/dist', '**/out-tsc', '**/node_modules', '**/.vite', '**/.vscode'],
+    ignores: ['**/dist', '**/out-tsc', '**/node_modules', '**/.vite', '**/.vscode', '**/*.config.ts'],
   },
   {
-    files: ['**/*.ts', '**/*.tsx', '**/*.cts', '**/*.mts', '**/*.js', '**/*.jsx', '**/*.cjs', '**/*.mjs'],
+    files: ['src/**/*.ts', 'src/**/*.tsx', 'src/**/*.cts', 'src/**/*.mts', 'src/**/*.js', 'src/**/*.jsx', 'src/**/*.cjs', 'src/**/*.mjs'],
     extends: fixupConfigRules(
       compat.extends(
         'eslint:recommended',
