@@ -17,7 +17,7 @@ export function Bucket() {
 
   useEffect(() => {
     fetchStorageStats();
-  }, []);
+  }, [fileStore.folderPath, fileStore.files.length]);
 
   function getBreadcrumb() {
     const paths = fileStore.folderPath.split('/').filter((path) => path);
