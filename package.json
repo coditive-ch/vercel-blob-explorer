@@ -1,12 +1,18 @@
 {
   "name": "vercel-blob-explorer",
   "productName": "Vercel Blob Explorer",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "author": "coditive AG",
   "description": "Blob Explorer for Vercel Blob Storage",
   "main": ".vite/build/main.js",
-  "private": true,
-  "keywords": [],
+  "keywords": [
+    "vercel",
+    "blob",
+    "explorer",
+    "electron",
+    "react",
+    "vite"
+  ],
   "license": "MIT",
   "scripts": {
     "start": "electron-forge start",
