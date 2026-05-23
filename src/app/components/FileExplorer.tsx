@@ -6,7 +6,6 @@ import { useModalStore } from '../stores/ModalStore';
 // Icons
 import DownloadIcon from '../assets/icons/download.svg?react';
 import FileUploadIcon from '../assets/icons/file-upload.svg?react';
-import FolderIcon from '../assets/icons/folder.svg?react';
 import FolderUploadIcon from '../assets/icons/folder-upload.svg?react';
 import SearchIcon from '../assets/icons/search.svg?react';
 import TrashIcon from '../assets/icons/trash.svg?react';
@@ -65,26 +64,9 @@ export function FileExplorer() {
     }
   }
 
-  function getFolderName() {
-    if (!fileStore.folderPath || fileStore.folderPath.trim() === '') {
-      return 'Root';
-    }
-
-    return (
-      fileStore.folderPath
-        .split('/')
-        .filter((item) => item.trim() !== '')
-        .pop() || ''
-    );
-  }
-
   return (
     <div className="text-brand-dark-blue flex h-full flex-col gap-4 rounded-lg bg-white p-4 shadow">
       <div className="flex flex-row">
-        <div className="mr-auto flex flex-row gap-2">
-          <FolderIcon className="size-6" />
-          <span className="text-brand-dark-blue text-lg font-medium uppercase">{getFolderName()}</span>
-        </div>
         <div className="flex grow flex-row-reverse gap-2 border-r-2 border-slate-200 px-4 py-2">
           <ExplorerButton clickHandler={() => setSearchEnabled(!searchEnabled)} icon={SearchIcon} />
           {searchEnabled && (
