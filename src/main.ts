@@ -25,6 +25,7 @@ const createWindow = () => {
     width: 800,
     height: 600,
     show: false,
+    resizable: false,
     titleBarStyle: 'default',
     ...(process.platform !== 'darwin' ? { titleBarOverlay: true } : {}),
     webPreferences: {
