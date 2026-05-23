@@ -45,7 +45,7 @@ export function FileExplorerList({ isList, searchValue }: { isList: boolean; sea
 
   function handleDeleteFile(file: FileItem) {
     modalStore.openModal({
-      title: `Confirm Deletion of ${file.fileName}`,
+      title: `Confirm Deletion of ${file.fileName}?`,
       content: '',
       onConfirm: () => fileStore.deleteFile(file.pathname),
       onClose: () => {},
@@ -56,7 +56,7 @@ export function FileExplorerList({ isList, searchValue }: { isList: boolean; sea
 
   function handleDeleteFolder(folder: FolderInfo) {
     modalStore.openModal({
-      title: `Confirm Deletion of ${folder.name}`,
+      title: `Confirm Deletion of ${folder.name}?`,
       content: '',
       onConfirm: () => fileStore.deleteFolder(folder.path),
       onClose: () => {},

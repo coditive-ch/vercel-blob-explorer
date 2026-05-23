@@ -37,9 +37,12 @@ export function DetailView() {
     if (!file) return;
 
     modalStore.openModal({
-      title: `Confirm Deletion of ${file.fileName}`,
+      title: `Confirm Deletion of ${file.fileName}?`,
       content: '',
-      onConfirm: () => fileStore.deleteFile(file.pathname),
+      onConfirm: () => {
+        fileStore.deleteFile(file.pathname);
+        fileStore.setDetailViewItem(null);
+      },
       onClose: () => {},
       showInput: false,
       inputLabel: '',
@@ -61,7 +64,7 @@ export function DetailView() {
       className="fixed inset-0 z-20 grid bg-transparent backdrop-blur-sm backdrop-brightness-75"
       onClick={() => fileStore.setDetailViewItem(null)}>
       <div
-        className="ml-auto flex w-1/3 flex-col gap-6 overflow-y-auto bg-white p-8 shadow"
+        className="ml-auto flex w-1/2 flex-col gap-6 overflow-y-auto bg-white p-8 shadow"
         onClick={(e) => e.stopPropagation()}>
         <div className="flex flex-col gap-2">
           <div className="text-brand-dark-blue text-4xl uppercase">Detail View</div>
@@ -116,7 +119,7 @@ export function DetailView() {
           <button
             className={`flex h-16 cursor-pointer flex-row place-items-center justify-center rounded-lg border-2 border-gray-300 bg-white shadow hover:brightness-90`}
             onClick={handleDelete}>
-            <TrashIcon className="text-brand-dark-blue size-10" />
+            <TrashIcon className="text-brand-dark-blue m-auto size-10" />
           </button>
         </div>
       </div>
