@@ -67,13 +67,13 @@ export function FileExplorer() {
   return (
     <div className="text-brand-dark-blue flex h-full flex-col gap-4 rounded-lg bg-white p-4 shadow">
       <div className="flex flex-row">
-        <div className="flex grow flex-row-reverse gap-2 border-r-2 border-slate-200 px-4 py-2">
+        <div className="flex grow flex-row-reverse gap-2 border-r-2 h-15 border-slate-200 px-4 py-2">
           <ExplorerButton clickHandler={() => setSearchEnabled(!searchEnabled)} icon={SearchIcon} />
           {searchEnabled && (
             <input
               type="text"
               id="Search"
-              className="focus:outline-brand-light-blue text-brand-dark-blue h-12 w-full rounded-lg border-2 border-slate-200 p-2 text-lg shadow"
+              className="focus:outline-brand-light-blue text-brand-dark-blue h-11 w-full rounded-lg border-2 border-slate-200 p-2 text-lg shadow"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
             />
