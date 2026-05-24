@@ -186,12 +186,18 @@ async function handleFileServiceFolderUpload(token: string, folderPath: string) 
         const subFileStats = await stat(subFilePath);
 
         if (subFileStats.isFile()) {
+          // Normalize paths and build a POSIX remote path so uploads work correctly across OSes (Windows uses backslashes)
+          const topFolderName = path.basename(filePaths[0]) || '';
+          const relativePath = path.relative(filePaths[0], subFilePath).split(path.sep).join('/');
+          const normalizedBase = folderPath ? folderPath.replace(/\\/g, '/').replace(/\/+$/, '') : '';
+          const parts = [];
+          if (normalizedBase) parts.push(normalizedBase);
+          if (topFolderName) parts.push(topFolderName);
+          if (relativePath) parts.push(relativePath);
+          const remoteFolderPath = parts.join('/');
+  
           filesWithPath.push({
-            remoteFolderPath: path.join(
-              folderPath,
-              filePaths[0].split('/').pop() || '',
-              subFilePath.replace(filePaths[0], ''),
-            ),
+            remoteFolderPath,
             localFilePath: subFilePath,
             size: subFileStats.size,
           });

@@ -70,9 +70,11 @@ export class FileService {
     localFilePath: string,
     progressFN: (percentage: number, fileSize: number, uploadedSize: number) => void,
   ): Promise<FileItem> {
-    // Combine FileName with FolderPath of blob storage to create the full path for the uploaded file
+    // Combine FileName with FolderPath of blob storage to create the full path for the uploaded file.
+    // Normalize to POSIX-style paths so uploads work correctly across OSes (Windows uses backslashes).
     const fileName = path.basename(localFilePath);
-    const filePath = path.join(uploadFolder, fileName);
+    const normalizedUploadFolder = uploadFolder ? uploadFolder.replace(/\\/g, '/').replace(/\/+$/, '') : '';
+    const filePath = path.posix.join(normalizedUploadFolder, fileName);
     const fileStats = await stat(localFilePath);
     const fileSize = fileStats.size;
     let downloadedPercentage = 0;
@@ -81,7 +83,7 @@ export class FileService {
     // Using streams allows us to handle large files efficiently without loading the entire file into memory
     const fileReader = createReadStream(localFilePath);
 
-    log.info('Starting File Upload');
+    log.info('Starting File Upload into blob storage', { filePath, fileSize });
 
     // Upload the file stream to the blob storage with @vercel/blob
     const res = await put(filePath, fileReader, {
@@ -146,14 +148,16 @@ export class FileService {
 
   async createFolder(token: string, pathname: string): Promise<FolderInfo | null> {
     try {
-      await put(pathname, new Blob([], { type: 'application/octet-stream' }), { access: 'public', token });
+      // Normalize to POSIX and ensure trailing slash to represent a folder in blob storage
+      const normalizedPath = (pathname || '').replace(/\\/g, '/').replace(/\/+$/, '') + '/';
+      await put(normalizedPath, new Blob([], { type: 'application/octet-stream' }), { access: 'public', token });
       return {
         name:
-          pathname
+          normalizedPath
             .split('/')
             .filter((part) => part !== '')
             .pop() ?? '',
-        path: pathname,
+        path: normalizedPath,
       };
     } catch (error) {
       log.error(`Failed to create folder at ${pathname}:`, error);
