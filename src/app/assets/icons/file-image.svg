@@ -1,0 +1,11 @@
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none"
+  xmlns="http://www.w3.org/2000/svg">
+  <!-- Äußerer Rahmen -->
+  <rect x="8" y="8" width="84" height="84" rx="15" stroke="currentColor" stroke-width="8" />
+
+  <!-- Berge -->
+  <path d="M18 78L42 45L58 65L72 52L82 78" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Sonne -->
+  <circle cx="32" cy="32" r="7" stroke="currentColor" stroke-width="8"/>
+</svg>

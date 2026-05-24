@@ -1,0 +1,29 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Montserrat";
+  font-weight: 400;
+  background-color: #f4f4f4;
+  scroll-behavior: smooth;
+}
+
+@font-face {
+  font-family: "Montserrat";
+  src: url("./assets/fonts/Montserrat-VariableFont_wght.ttf") format("truetype");
+}
+
+// Sidebar styles for active and inactive NavLink states
+a.sidebar-link {
+  small {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  &.active {
+    background-color: rgba(255, 255, 255, 0.3);
+
+    small {
+      color: white;
+    }
+  }
+}

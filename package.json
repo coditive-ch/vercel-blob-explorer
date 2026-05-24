@@ -1,0 +1,100 @@
+{
+  "name": "vercel-blob-explorer",
+  "productName": "Vercel Blob Explorer",
+  "version": "0.0.1",
+  "author": "coditive AG",
+  "description": "Blob Explorer for Vercel Blob Storage",
+  "main": ".vite/build/main.js",
+  "keywords": [
+    "vercel",
+    "blob",
+    "explorer",
+    "electron",
+    "react",
+    "vite"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "make-windows": "electron-forge make --platform=win32",
+    "publish": "electron-forge publish",
+    "lint": "eslint --ext .ts,.tsx .",
+    "dist:linux": "electron-builder --linux",
+    "dist:win": "electron-builder --win",
+    "dist:mac": "electron-builder --mac"
+  },
+  "build": {
+    "appId": "ch.coditive.vercelblobexplorer",
+    "productName": "Vercel Blob Explorer",
+    "directories": {
+      "output": "dist"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ]
+    }
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.0",
+    "@vercel/blob": "^2.3.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "adm-zip": "^0.5.17",
+    "axios": "^1.16.0",
+    "electron-log": "^5.4.3",
+    "electron-squirrel-startup": "^1.0.1",
+    "mime": "^4.1.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-redux": "^9.2.0",
+    "react-router": "^7.15.0",
+    "tailwindcss": "^4.3.0",
+    "vite-plugin-svgr": "^5.2.0",
+    "zustand": "^5.0.13"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.11.1",
+    "@electron-forge/maker-deb": "^7.11.1",
+    "@electron-forge/maker-rpm": "^7.11.1",
+    "@electron-forge/maker-squirrel": "^7.11.1",
+    "@electron-forge/maker-zip": "^7.11.1",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.11.1",
+    "@electron-forge/plugin-fuses": "^7.11.1",
+    "@electron-forge/plugin-vite": "^7.11.1",
+    "@electron/fuses": "^2.1.1",
+    "@eslint/compat": "^2.1.0",
+    "@eslint/eslintrc": "^3.3.5",
+    "@eslint/js": "^10.0.1",
+    "@types/adm-zip": "^0.5.8",
+    "@types/electron-squirrel-startup": "^1.0.2",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@typescript-eslint/eslint-plugin": "^8.59.3",
+    "@typescript-eslint/parser": "^8.59.3",
+    "electron": "42.0.1",
+    "electron-builder": "^26.8.1",
+    "eslint": "^10.3.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^17.6.0",
+    "prettier": "^3.8.3",
+    "prettier-plugin-tailwindcss": "^0.8.0",
+    "sass-embedded": "^1.99.0",
+    "typescript": "~6.0.3",
+    "vite": "^8.0.12"
+  }
+}

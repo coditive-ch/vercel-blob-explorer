@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "nodenext",
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "rootDir": "src",
+    "outDir": ".vite",
+    "moduleResolution": "nodenext",
+    "resolveJsonModule": true,
+    "jsx": "react-jsx",
+    "types": [
+      "electron-squirrel-startup",
+      "react",
+      "react-dom",
+      "vite/client",
+      "vite-plugin-svgr/client",
+      "@types/adm-zip"
+    ]
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    ".vite"
+  ]
+}
