@@ -16,9 +16,9 @@ jobs:
           - os: ubuntu-latest
             platform: linux
           - os: windows-latest
-            platform: win
+            platform: win32
           - os: macos-latest
-            platform: mac
+            platform: darwin
 
     runs-on: ${{ matrix.os }}
 
@@ -35,31 +35,23 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      # Linux: zusätzliche Abhängigkeiten für electron-builder
+      # Linux: zusätzliche Abhängigkeiten
       - name: Install Linux build dependencies
         if: matrix.platform == 'linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y rpm libarchive-tools
 
-      - name: Build Electron app (${{ matrix.platform }})
-        run: yarn run electron-builder --${{ matrix.platform }}
+      - name: Make Electron app (${{ matrix.platform }})
+        run: yarn make --platform=${{ matrix.platform }}
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: electron-${{ matrix.platform }}
-          path: |
-            dist/*.exe
-            dist/*.msi
-            dist/*.dmg
-            dist/*.pkg
-            dist/*.AppImage
-            dist/*.deb
-            dist/*.rpm
-            dist/*.snap
+          path: out/make/**/*
           if-no-files-found: warn
           retention-days: 1
 
@@ -82,14 +74,6 @@ jobs:
           draft: false
           prerelease: ${{ contains(github.ref_name, '-beta') || contains(github.ref_name, '-alpha') || contains(github.ref_name, '-rc') }}
           generate_release_notes: true
-          files: |
-            artifacts/**/*.exe
-            artifacts/**/*.msi
-            artifacts/**/*.dmg
-            artifacts/**/*.pkg
-            artifacts/**/*.AppImage
-            artifacts/**/*.deb
-            artifacts/**/*.rpm
-            artifacts/**/*.snap
+          files: artifacts/**/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
